@@ -99,7 +99,7 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
                 $scope.texts = {
                     checkAll: 'Check All',
                     uncheckAll: 'Uncheck All',
-                    selectionCount: 'checked',
+                    selectionCount: 'checked foo',
                     selectionOf: '/',
                     searchPlaceholder: 'Search...',
                     buttonDefaultText: 'Select',
@@ -130,6 +130,14 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
                     } else {
                         findObj[$scope.settings.externalIdProp] = id;
                     }
+
+                    return findObj;
+                }
+
+                function getFindName(id) {
+                    var findObj = {};
+
+                        findObj = $scope.settings.displayProp;
 
                     return findObj;
                 }
@@ -207,6 +215,14 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
 
                             if (totalSelected === 0) {
                                 return $scope.texts.buttonDefaultText;
+                            }
+                            /**
+                             * Ensequence:
+                             * Change the return if one selected
+                             * **/
+                            else if (totalSelected === 1) {
+                                return getSelectedLabel($scope.options);
+
                             } else {
                                 return totalSelected + ' ' + $scope.texts.dynamicButtonTextSuffix;
                             }
@@ -222,6 +238,24 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
                     }
 
                     return '';
+                };
+
+                /**
+                 * Ensequence:
+                 * Get the label value of the selected option
+                 * **/
+                function getSelectedLabel (selectList) {
+
+                    var selected = {};
+
+                    angular.forEach(selectList, function (optionItem) {
+
+                        if ($scope.isChecked($scope.getPropertyForObject(optionItem, $scope.settings.idProp))) {
+                            selected = optionItem.label;
+                        }
+                    });
+
+                    return selected;
                 };
 
                 $scope.selectAll = function () {
