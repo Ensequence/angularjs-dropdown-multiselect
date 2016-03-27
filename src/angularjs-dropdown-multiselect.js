@@ -212,10 +212,10 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
                              * Ensequence:
                              * Change the return if one selected
                              * **/
-                            else if (totalSelected === 1) {
-                                return getSelectedLabel($scope.options);
-
-                            } else {
+                            else if (totalSelected > 0 && totalSelected <= 3) {
+                                return getSelectedLabel($scope.options).join(", ");
+                            }
+                            else {
                                 return totalSelected + ' ' + $scope.texts.dynamicButtonTextSuffix;
                             }
                         }
@@ -238,12 +238,14 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
                  * **/
                 function getSelectedLabel (selectList) {
 
-                    var selected = {};
+                    var selected = [];
+                    var item = {};
 
                     angular.forEach(selectList, function (optionItem) {
 
                         if ($scope.isChecked($scope.getPropertyForObject(optionItem, $scope.settings.idProp))) {
-                            selected = optionItem.label;
+                            item = optionItem[$scope.settings.displayProp];
+                            selected.push(item);
                         }
                     });
 
