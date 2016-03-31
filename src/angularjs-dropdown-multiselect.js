@@ -179,10 +179,14 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
                 $scope.getButtonText = function () {
                     if ($scope.settings.dynamicTitle && ($scope.selectedModel.length > 0 || (angular.isObject($scope.selectedModel) && _.keys($scope.selectedModel).length > 0))) {
                         if ($scope.settings.smartButtonMaxItems > 0) {
+
                             var itemsText = [];
 
                             angular.forEach($scope.options, function (optionItem) {
+
                                 if ($scope.isChecked($scope.getPropertyForObject(optionItem, $scope.settings.idProp))) {
+
+
                                     var displayText = $scope.getPropertyForObject(optionItem, $scope.settings.displayProp);
                                     var converterResponse = $scope.settings.smartButtonTextConverter(displayText, optionItem);
 
@@ -208,13 +212,6 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
                             if (totalSelected === 0) {
                                 return $scope.texts.buttonDefaultText;
                             }
-                            /**
-                             * Ensequence:
-                             * Change the return if one selected
-                             * **/
-                            else if (totalSelected > 0 && totalSelected <= 3) {
-                                return getSelectedLabel($scope.options).join(", ");
-                            }
                             else {
                                 return totalSelected + ' ' + $scope.texts.dynamicButtonTextSuffix;
                             }
@@ -230,26 +227,6 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
                     }
 
                     return '';
-                };
-
-                /**
-                 * Ensequence:
-                 * Get the label value of the selected option
-                 * **/
-                function getSelectedLabel (selectList) {
-
-                    var selected = [];
-                    var item = {};
-
-                    angular.forEach(selectList, function (optionItem) {
-
-                        if ($scope.isChecked($scope.getPropertyForObject(optionItem, $scope.settings.idProp))) {
-                            item = optionItem[$scope.settings.displayProp];
-                            selected.push(item);
-                        }
-                    });
-
-                    return selected;
                 };
 
                 $scope.selectAll = function () {
@@ -276,6 +253,7 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
                 };
 
                 $scope.setSelectedItem = function (id, dontRemove) {
+
                     var findObj = getFindObj(id);
                     var finalObj = null;
 
@@ -309,6 +287,7 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
                 };
 
                 $scope.isChecked = function (id) {
+
                     if ($scope.singleSelection) {
                         return $scope.selectedModel !== null && angular.isDefined($scope.selectedModel[$scope.settings.idProp]) && $scope.selectedModel[$scope.settings.idProp] === getFindObj(id)[$scope.settings.idProp];
                     }
